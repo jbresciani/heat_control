@@ -1,0 +1,25 @@
+[[source]]
+name = "nexus"
+url = "https://pypi.i.xmatters.com/repository/pypi-all/simple"
+verify_ssl = true
+
+[dev-packages]
+ipython = "*"
+pylint = "*"
+pylama = "*"
+"flake8" = "*"
+
+[packages]
+flask = "*"
+jinja2 = "*"
+requests = "*"
+flask-sqlalchemy = "*"
+flask-apscheduler = "*"
+flask-marshmallow = "*"
+marshmallow-sqlalchemy = "*"
+flask-wtf = "*"
+webargs = "*"
+yup = "*"
+
+[requires]
+python_version = "3.7"

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" type="text/css" href="./static/stylesheets/style.css"> 
+</head>
+<body>
+    <H2>Add a New Thermostat</H2>
+    {% if warning_message %}
+    <div class=editThermostatErrorTop>
+        <p class=editThermostatErrorTop><strong>Error:</strong> {{ warning_message }}
+    </div>
+    {% endif %}
+    <div class=editThermostat>
+        <form class=editThermostat method=post>
+            <p class=editThermostatError>{% if warning_message.get('name') %}{{ warning_message.get('name') }}{% endif %}</p>
+            <p class=editThermostat>Name:</p>
+            <input class=editThermostatInput type=text name=name>
+            <p class=editThermostatError>{% if warning_message.get('location') %}{{ warning_message.get('location') }}{% endif %}</p>
+            <p class=editThermostat>Location:</p>
+            <input class=editThermostatInput type=text name=location>
+            <p class=editThermostatError>{% if warning_message.get('group') %}{{ warning_message.get('group') }}{% endif %}</p>
+            <p class=editThermostat>Group:</p> 
+            <input class=editThermostatInput type=text name=group>
+            <p class=editThermostatError>{% if warning_message.get('description') %}{{ warning_message.get('description') }}{% endif %}</p>
+            <p class=editThermostat>Description:</p>
+            <input class=editThermostatInput type=text name=description>
+            <p class=editThermostatError>{% if warning_message.get('url') %}{{ ','.join(warning_message.get('url')) }}{% endif %}</p>
+            <p class=editThermostat>URL:</p>
+            <input class=editThermostatInput type=url name=url><br>
+            <br>
+            <input class=editThermostatInputSubmit type=submit value=Add>
+        </form>
+    </div>
+</body>    

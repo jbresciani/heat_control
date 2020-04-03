@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  <link rel="stylesheet" type="text/css" href="../static/stylesheets/style.css"> 
+  {% for thermostat in thermostats %}
+  <script>
+    $(function(){  
+      $( "#slider-{{ thermostat['id'] }}" ).slider({
+        orientation: "horizontal",
+        range: "min",
+        min: 0,
+        max: 40,
+        value: {{ thermostat['requested_temp'] }},
+        slide: function( event, ui ) {
+          $( "#amount" ).val( ui.value );
+        }
+      });
+      $( "#amount" ).val( $( "#slider-{{ thermostat['id'] }}" ).slider( "value" ) );
+    });
+  </script>
+  {% endfor %}
+</head>
+
+<body>
+<div class="mainBody" style="width: 100%;">
+  <h2>Thermostat Controls</h2>
+  {% for group in groups %}
+  <div class="thermostatGroup" id="thermostatGroup{{ group.lower().capitalize() }}">
+    <h2>{{ group.lower().capitalize() }}</h2>
+    {% for thermostat in thermostats %}
+    {% if thermostat['group'] == group %}
+    <div class="thermostatInfo" id="thermostat-{{ thermostat['id'] }}">
+      <h3>{{ thermostat['name'].lower().capitalize() }}</h3>
+      <div class="temperatureSlider" id="slider-{{ thermostat['id'] }}" style="width:200px;height:6px;"></div>
+      <p class="temperatureSlider">Requested temperature: {{ thermostat['requested_temp'] }}&#8451;
+      <p class="temperatureSlider">Current temperature: {{ thermostat['current_temp'] }}&#8451;
+      </p>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% endfor %}
+  <a href="{{ url_for('.create_thermostat') }}"> New Thermostat </a>
+</div>
+</body>
+</html>
