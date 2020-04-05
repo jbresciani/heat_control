@@ -29,8 +29,14 @@ def favicon():
 @control.route('/temperature_control', methods=['POST', 'GET'])
 def temperature_control():
     if request.method == 'POST':
-        print(request.form)
-        Thermostats.update_row(request.form)
+        action = request.form.get('action', False)
+        print(f'-------------------------------- {request.form} --------------------------------')
+        if action == "delete":
+            print('delete thermostat')
+        if action == "edit":
+            print('edit thermostat')
+        else:
+            Thermostats.update_row({'id': request.form['id'], 'requested_temp': request.form['requested_temp']})
     thermostats = Thermostats.get_thermostats()
     groups = set(thermostat['group'] for thermostat in thermostats)
     print(f"{groups}")
@@ -80,12 +86,6 @@ def create_thermostat():
 
 
     return render_template('create_thermostat.html', warning_message=warning_message)
-
-
-@control.route('/change_temperature', methods=['POST'])
-def change_temperature():
-    """ Add a new thermostat """
-    print(request)
 
 
 @control.route('/')

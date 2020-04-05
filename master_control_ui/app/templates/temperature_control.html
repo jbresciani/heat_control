@@ -9,17 +9,26 @@
     <h2>Thermostat Controls</h2>
     {% for group in groups %}
     <div class="thermostatGroup" id="thermostatGroup{{ group.lower().capitalize() }}">
-      <h2>{{ group.lower().capitalize() }}</h2>
       {% for thermostat in thermostats %}
       {% if thermostat['group'] == group %}
       <div class="thermostatInfo" id="thermostat-{{ thermostat['id'] }}">
-        <h3>{{ thermostat['name'].lower().capitalize() }}</h3>
+        <div class="thermostatInfoHeader">
+          <div class="thermostatName">{{ thermostat['name'].lower().capitalize() }}
+          </div>
+          <div class="thermostatButtonsOuter">
+            <div class="thermostatButtonsInner">
+              <form id="edit-{{ thermostat['id'] }}" method='POST'>
+                <input type="image" src="../static/images/gears.png" name="action" value="config" class="thermostatButtons" />
+                <input type="image" src="../static/images/garbageCan.png" name="action" value="delete" class="thermostatButtons" />
+                <input type="hidden" name="id" value="{{ thermostat['id'] }}">
+              </form>
+            </div>
+          </div>
+        </div>
         <div class="temperatureSlider">
-          <form id="form-{{ thermostat['id'] }}" method='POST'>
+          <form id="slider-{{ thermostat['id'] }}" method='POST'>
             <input type="range" min="1" max="50" value="{{ thermostat['requested_temp'] }}" class="slider" id="input-{{ thermostat['id'] }}" name="requested_temp">
             <input type="hidden" name="id" value="{{ thermostat['id'] }}">
-            <input type="hidden" name="name" value="{{ thermostat['name'] }}">
-
           </form>
         </div>
         <p class="temperatureInfo">Requested temperature: <span class="thermostatValue" id="requestedTemp-{{ thermostat['id'] }}">{{ thermostat['requested_temp'] }}</span><span class="thermostatValue" ></span>&#8451;</span></p>
@@ -35,6 +44,13 @@
           output_{{ thermostat['id'].replace('-', '') }}.innerHTML = this.value;
         }
         slider_{{ thermostat['id'].replace('-', '') }}.onchange = function() {
+          this.form.submit();
+        }
+      </script>
+      <script>
+        var edit_{{ thermostat['id'].replace('-', '') }} = document.getElementById("edit-{{ thermostat['id'] }}");
+
+        edit_{{ thermostat['id'].replace('-', '') }}.onchange = function() {
           this.form.submit();
         }
       </script>
