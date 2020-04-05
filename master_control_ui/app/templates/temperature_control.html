@@ -15,7 +15,12 @@
       <div class="thermostatInfo" id="thermostat-{{ thermostat['id'] }}">
         <h3>{{ thermostat['name'].lower().capitalize() }}</h3>
         <div class="temperatureSlider">
-          <input type="range" min="1" max="50" value="{{ thermostat['requested_temp'] }}" class="slider" id="input-{{ thermostat['id'] }}">
+          <form id="form-{{ thermostat['id'] }}" method='POST'>
+            <input type="range" min="1" max="50" value="{{ thermostat['requested_temp'] }}" class="slider" id="input-{{ thermostat['id'] }}" name="requested_temp">
+            <input type="hidden" name="id" value="{{ thermostat['id'] }}">
+            <input type="hidden" name="name" value="{{ thermostat['name'] }}">
+
+          </form>
         </div>
         <p class="temperatureInfo">Requested temperature: <span class="thermostatValue" id="requestedTemp-{{ thermostat['id'] }}">{{ thermostat['requested_temp'] }}</span><span class="thermostatValue" ></span>&#8451;</span></p>
         <p class="temperatureInfo">Current temperature: <span class="thermostatValue" id="currentTemp-{{ thermostat['id'] }}">{{ thermostat['current_temp'] }}</span><span class="thermostatValue" ></span>&#8451;</span></p>
@@ -28,6 +33,9 @@
         // Update the current slider value (each time you drag the slider handle)
         slider_{{ thermostat['id'].replace('-', '') }}.oninput = function() {
           output_{{ thermostat['id'].replace('-', '') }}.innerHTML = this.value;
+        }
+        slider_{{ thermostat['id'].replace('-', '') }}.onchange = function() {
+          this.form.submit();
         }
       </script>
       {% endif %}
