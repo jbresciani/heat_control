@@ -21,7 +21,7 @@ class Thermostats(db.Model):
 
         Inputs:
             cls  (obj) - the class object, this is not directly passed in
-            data (dict) - the information to be updated, must contain at least thermostat_id and one other key
+            data (dict) - the information to be updated, must contain at least thermostat id and one other key
         '''
         cls.query.filter(cls.id == data['id']).update(data)
         db.session.commit()
