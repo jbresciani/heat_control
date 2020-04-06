@@ -11,36 +11,12 @@ control = Blueprint('control', __name__)
 logger = logging.getLogger(__name__)
 
 
-@control.route('/set_temp', methods=['POST'])
-def set_temp():
-    thermostat = {}
-    thermostat['name'] = request.form['thermostat_name']
-    thermostat['requested_temp'] = request.form['requested_temp']
-    logger.info(f"recieved request for {thermostat}")
-
-@control.route('/favicon.ico')
-def favicon():
-    return send_from_directory(
-        directory='./static/',
-        filename='favicon.ico',
-        mimetype='image/vnd.microsoft.icon')
-
-
-@control.route('/temperature_control', methods=['POST', 'GET'])
-def temperature_control():
-    if request.method == 'POST':
-        action = request.form.get('action', False)
-        print(f'-------------------------------- {request.form} --------------------------------')
-        if action == "delete":
-            print('delete thermostat')
-        if action == "edit":
-            print('edit thermostat')
-        else:
-            Thermostats.update_row({'id': request.form['id'], 'requested_temp': request.form['requested_temp']})
-    thermostats = Thermostats.get_thermostats()
-    groups = set(thermostat['group'] for thermostat in thermostats)
-    print(f"{groups}")
-    return render_template('temperature_control.html', thermostats=thermostats, groups=groups)
+def find_thermostat_by_name(name):
+    """ find a thermostat entry by name """
+    if db.session.query(db.session.query(Thermostats).filter_by(name=name.lower()).exists()).scalar():
+        logger.error("Thermostat already exists")
+        return True
+    return False
 
 
 def add_thermostat(request):
@@ -52,7 +28,6 @@ def add_thermostat(request):
     thermostat = {
         'id': str(uuid1()),
         'name': request.form['name'].lower(),
-        'location': request.form['location'],
         'group': request.form['group'],
         'description': request.form['description'],
         'url': request.form['url']
@@ -62,30 +37,51 @@ def add_thermostat(request):
     logger.info(f"Added Thermostat {thermostat['name']}")
 
 
-def find_thermostat_by_name(name):
-    """ find a thermostat entry by name """
-    if db.session.query(db.session.query(Thermostats).filter_by(name=name.lower()).exists()).scalar():
-        logger.error("Thermostat already exists")
-        return True
-    return False
+@control.route('/set_temp', methods=['POST'])
+def set_temp():
+    thermostat = {}
+    thermostat['name'] = request.form['thermostat_name']
+    thermostat['requested_temp'] = request.form['requested_temp']
+    logger.info(f"recieved request for {thermostat}")
 
 
-@control.route('/create_thermostat', methods=['GET', 'POST'])
-def create_thermostat():
-    """ Add a new thermostat """
+@control.route('/favicon.ico')
+def favicon():
+    return send_from_directory(
+        directory='./static/images/',
+        filename='favicon.ico',
+        mimetype='image/vnd.microsoft.icon')
+
+
+@control.route('/temperature_control', methods=['POST', 'GET'])
+def temperature_control():
     warning_message = {}
     if request.method == 'POST':
-        errors = create_thermostat_schema.validate(request.form)
-        if errors:
-            warning_message = errors
-        elif find_thermostat_by_name(request.form['name']):
-            warning_message = {'name': 'That thermostat name is already in use'}
-        else:
-            add_thermostat(request)
-            return redirect('/temperature_control')
+        print(f'-------------------------------- {request.form} --------------------------------')
+        if request.form['action'] == "delete":
+            print('delete thermostat')
+        if request.form['action'] == "edit":
+            print('edit thermostat')
+            Thermostats.update_row({
+                'id': request.form['id'],
+                'name': request.form['name'],
+                'description': request.form['description'],
+                'url': request.form['url'],
+                })
+        if request.form['action'] == "change_temp":
+            Thermostats.update_row({'id': request.form['id'], 'requested_temp': request.form['requested_temp']})
+        if request.form['action'] == "new":
+            errors = create_thermostat_schema.validate(request.form)
+            if errors:
+                warning_message = errors
+            elif find_thermostat_by_name(request.form['name']):
+                warning_message = {'name': 'That thermostat name is already in use'}
+            else:
+                add_thermostat(request)
 
-
-    return render_template('create_thermostat.html', warning_message=warning_message)
+    thermostats = Thermostats.get_thermostats()
+    groups = set(thermostat['group'] for thermostat in thermostats)
+    return render_template('temperature_control.html', thermostats=thermostats, groups=groups, warning_message=warning_message)
 
 
 @control.route('/')

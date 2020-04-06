@@ -8,7 +8,6 @@ class Thermostats(db.Model):
     __tablename__ = 'thermostats'
     id = db.Column(db.String(128), primary_key=True)
     name = db.Column(db.String(128), index=True)
-    location = db.Column(db.String(128))
     group = db.Column(db.String(128), index=True)
     description = db.Column(db.String(256))
     url = db.Column(db.String(128))

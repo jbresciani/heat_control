@@ -15,9 +15,8 @@ class MockRecord(object):
     def __init__(self):
         self.form = {
             'name': 'default',
-            'location': 'unknown',
-            'group': 'unknown',
-            'description': 'unknown',
+            'group': 'default',
+            'description': 'default for dev purposes',
             'url': 'https://127.0.0.1:8080/'
         }
 

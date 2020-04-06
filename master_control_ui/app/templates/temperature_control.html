@@ -11,54 +11,111 @@
     <div class="thermostatGroup" id="thermostatGroup{{ group.lower().capitalize() }}">
       {% for thermostat in thermostats %}
       {% if thermostat['group'] == group %}
-      <div class="thermostatInfo" id="thermostat-{{ thermostat['id'] }}">
-        <div class="thermostatInfoHeader">
-          <div class="thermostatName">{{ thermostat['name'].lower().capitalize() }}
-          </div>
-          <div class="thermostatButtonsOuter">
-            <div class="thermostatButtonsInner">
-              <form id="edit-{{ thermostat['id'] }}" method='POST'>
-                <input type="image" src="../static/images/gears.png" name="action" value="config" class="thermostatButtons" />
-                <input type="image" src="../static/images/garbageCan.png" name="action" value="delete" class="thermostatButtons" />
-                <input type="hidden" name="id" value="{{ thermostat['id'] }}">
-              </form>
-            </div>
+      <div class="thermostatHeader">
+        <div class="thermostatName">{{ thermostat['name'].lower().capitalize() }}
+        </div>
+        <div class="thermostatButtonsOuter">
+          <div class="thermostatButtonsInner">
+            <button class="editThermostatOpenButton" onclick="openEditForm_{{ thermostat['id'].replace('-', '') }}()"><img src="../static/images/gears.png" alt=Edit height="15" width="15"></button>
+            <button class="deleteThermostatOpenButton" onclick="openDeleteForm_{{ thermostat['id'].replace('-', '') }}()"><img src="../static/images/garbageCan.png" alt=Delete height="15" width="15"></button>
           </div>
         </div>
+      </div>
+      <div class="editThermostatPopup" id="editDiv-{{ thermostat['id'] }}">
+        <form class=editThermostatPopup id="editForm-{{ thermostat['id'] }}" method=post>
+          <label for="name">Name:</label>
+          <input class=editThermostat type=text value="{{ thermostat['name'] }}" name=name><br>
+          <label for="group">Group:</label> 
+          <input class=editThermostat type=text value="{{ thermostat['group'] }}" name=group><br>
+          <label for="description">Description:</label>
+          <input class=editThermostat type=text value="{{ thermostat['description'] }}" name=description><br>
+          <label for="url">URL:</label>
+          <input class=editThermostat type=url value="{{ thermostat['url'] }}" name=url><br>
+          <input type="hidden" name="id" value="{{ thermostat['id'] }}">
+          <input type="hidden" name="action" value="edit">
+          <br>
+          <button type="submit" class="editButton">Edit</button>
+          <button type="button" class="cancelButton" onclick="cancelEditForm_{{ thermostat['id'].replace('-', '') }}()">Cancel</button>
+        </form>
+      </div>
+      <div class="deleteThermostatPopup" id="deleteDiv-{{ thermostat['id'] }}">
+        <form class=deleteThermostatPopup id="deleteForm-{{ thermostat['id'] }}" method=post>
+          <input type="hidden" name="id" value="{{ thermostat['id'] }}">
+          <input type="hidden" name="action" value="delete">
+          <button type="submit" class="deleteButton">Confirm Deletion of {{ thermostat['name'] }}</button>
+          <button type="button" class="cancelButton" onclick="cancelDeleteForm_{{ thermostat['id'].replace('-', '') }}()">Cancel</button>
+        </form>
+      </div>
+      <div class="thermostatInfo" id="thermostat-{{ thermostat['id'] }}">
         <div class="temperatureSlider">
           <form id="slider-{{ thermostat['id'] }}" method='POST'>
-            <input type="range" min="1" max="50" value="{{ thermostat['requested_temp'] }}" class="slider" id="input-{{ thermostat['id'] }}" name="requested_temp">
+            <input type="range" min="1" max="50" value="{{ thermostat['requested_temp'] }}" class="temperatureSlider" id="input-{{ thermostat['id'] }}" name="requested_temp">
             <input type="hidden" name="id" value="{{ thermostat['id'] }}">
+            <input type="hidden" name="action" value="change_temp">
           </form>
         </div>
         <p class="temperatureInfo">Requested temperature: <span class="thermostatValue" id="requestedTemp-{{ thermostat['id'] }}">{{ thermostat['requested_temp'] }}</span><span class="thermostatValue" ></span>&#8451;</span></p>
         <p class="temperatureInfo">Current temperature: <span class="thermostatValue" id="currentTemp-{{ thermostat['id'] }}">{{ thermostat['current_temp'] }}</span><span class="thermostatValue" ></span>&#8451;</span></p>
       </div>
       <script>
+        // Update the current slider value (each time you drag the slider handle)
         var slider_{{ thermostat['id'].replace('-', '') }} = document.getElementById("input-{{ thermostat['id'] }}");
         var output_{{ thermostat['id'].replace('-', '') }} = document.getElementById("requestedTemp-{{ thermostat['id'] }}");
         output_{{ thermostat['id'].replace('-', '') }}.innerHTML = slider_{{ thermostat['id'].replace('-', '') }}.value;
-    
-        // Update the current slider value (each time you drag the slider handle)
         slider_{{ thermostat['id'].replace('-', '') }}.oninput = function() {
           output_{{ thermostat['id'].replace('-', '') }}.innerHTML = this.value;
         }
         slider_{{ thermostat['id'].replace('-', '') }}.onchange = function() {
           this.form.submit();
         }
-      </script>
-      <script>
-        var edit_{{ thermostat['id'].replace('-', '') }} = document.getElementById("edit-{{ thermostat['id'] }}");
-
-        edit_{{ thermostat['id'].replace('-', '') }}.onchange = function() {
-          this.form.submit();
+        // edit form popup
+        function openEditForm_{{ thermostat['id'].replace('-', '') }}() {
+          document.getElementById("editDiv-{{ thermostat['id'] }}").style.display = "block";
+        }
+        function cancelEditForm_{{ thermostat['id'].replace('-', '') }}() {
+          document.getElementById("editDiv-{{ thermostat['id'] }}").style.display = "none";
+        }
+        // delete confirmation form popup
+        function openDeleteForm_{{ thermostat['id'].replace('-', '') }}() {
+          document.getElementById("deleteDiv-{{ thermostat['id'] }}").style.display = "block";
+        }
+        function cancelDeleteForm_{{ thermostat['id'].replace('-', '') }}() {
+          document.getElementById("deleteDiv-{{ thermostat['id'] }}").style.display = "none";
         }
       </script>
       {% endif %}
       {% endfor %}
     </div>
     {% endfor %}
-    <a href="{{ url_for('.create_thermostat') }}"> New Thermostat </a>
+    <div id=newThermostat class=newThermostat>
+      <button class="newThermostatOpenButton" onclick="openNewThermostatForm()">Add New Thermostat</button>
+      <div class="newThermostatPopup" id="createNewThermostat">
+        <form class=newThermostatPopup id="createNewThermostat" method=post>
+          <label for="name">Name:</label>
+          <input class=editThermostat type=text name=name><br>
+          <label for="group">Group:</label> 
+          <input class=editThermostat type=text name=group><br>
+          <label for="description">Description:</label>
+          <input class=editThermostat type=text name=description><br>
+          <label for="url">URL:</label>
+          <input class=editThermostat type=url name=url><br>
+          <input type="hidden" name="id">
+          <input type="hidden" name="action">
+          <br>
+          <button type="submit" class="editButton">Add</button>
+          <button type="button" class="cancelButton" onclick="cancelNewThermostatForm()">Cancel</button>
+        </form>
+      </div>
+    </div>
+    <script>
+      // New Thermostat Form popup
+      function openNewThermostatForm() {
+        document.getElementById("createNewThermostat").style.display = "block";
+      }
+      function cancelNewThermostatForm() {
+        document.getElementById("createNewThermostat").style.display = "none";
+      }
+    </script>
   </div>
 </body>
 </html>
