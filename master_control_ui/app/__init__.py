@@ -5,21 +5,10 @@ from .extensions import db, ma, scheduler
 from .schedules import update_servers
 from .thermostats import update_thermostats
 from .models import Thermostats
-from .views import add_thermostat
 from flask import Flask
 from flask.logging import default_handler
 
 logger = logging.getLogger(__name__)
-
-class MockRecord(object):
-    def __init__(self):
-        self.form = {
-            'name': 'default',
-            'location': 'unknown',
-            'group': 'unknown',
-            'description': 'unknown',
-            'url': 'https://127.0.0.1:8080/'
-        }
 
 
 def setup_schedules(app):
@@ -41,15 +30,6 @@ def create_app():
         app.logger.removeHandler(default_handler)
         db.create_all()
         db.session.commit()
-        if app.config['ENV'] == 'development':
-            default = MockRecord()
-            if db.session.query(db.session.query(Thermostats).filter_by(name=default.form['name']).exists()).scalar():
-                print('default record exists')
-            else:
-                add_thermostat(default)
-        else:
-            print('********************** not adding default thermostat **********************')
-
         scheduler.start()
         update_thermostats()
 
