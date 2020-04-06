@@ -24,4 +24,4 @@ def get_current_tempurature(thermostat):
 def update_thermostats():
     for thermostat in Thermostats.get_thermostats():
         thermostat['current_temp'] = get_current_tempurature(thermostat)
-        Thermostats.update_row(thermostat)
+        Thermostats.update(thermostat)

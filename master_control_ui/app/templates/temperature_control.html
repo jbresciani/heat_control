@@ -87,6 +87,11 @@
       {% endfor %}
     </div>
     {% endfor %}
+    {% if warning_message %}
+    <div class=editThermostatErrorTop>
+      <p class=editThermostatErrorTop><strong>Error:</strong> {{ warning_message }}
+    </div>
+    {% endif %}
     <div id=newThermostat class=newThermostat>
       <button class="newThermostatOpenButton" onclick="openNewThermostatForm()">Add New Thermostat</button>
       <div class="newThermostatPopup" id="createNewThermostat">
@@ -99,8 +104,7 @@
           <input class=editThermostat type=text name=description><br>
           <label for="url">URL:</label>
           <input class=editThermostat type=url name=url><br>
-          <input type="hidden" name="id">
-          <input type="hidden" name="action">
+          <input type="hidden" name="action" value="new">
           <br>
           <button type="submit" class="editButton">Add</button>
           <button type="button" class="cancelButton" onclick="cancelNewThermostatForm()">Cancel</button>

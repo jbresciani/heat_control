@@ -128,9 +128,12 @@ div.editThermostatErrorTop {
     background-color: darkred;
     border: 2px solid black;
     border-radius: 8px;
-    padding: 10px;
-    margin-top: 30px;
-    margin-left: 70px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 10px;
+    padding-left: 10px;
+    margin-left: 2%;
+    margin-right: 2%;
     width: 400px;
     font-size:20px;
 }
@@ -197,7 +200,7 @@ form.editThermostatPopup, form.deleteThermostatPopup {
     background-color: white;
 }
 
-form.editThermostatPopup input[type=text], form.editThermostatPopup input[type=url] {
+form.editThermostatPopup input[type=text], form.editThermostatPopup input[type=url], form.newThermostatPopup input[type=text], form.newThermostatPopup input[type=url] {
     background: white;
     width: 100%;
 }
