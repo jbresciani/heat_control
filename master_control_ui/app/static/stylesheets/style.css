@@ -197,10 +197,14 @@ div.editThermostatPopup, div.deleteThermostatPopup {
 /* Add styles to the form container */
 form.editThermostatPopup, form.deleteThermostatPopup {
     padding: 10px;
-    background-color: white;
 }
 
-form.editThermostatPopup input[type=text], form.editThermostatPopup input[type=url], form.newThermostatPopup input[type=text], form.newThermostatPopup input[type=url] {
+form.editThermostatPopup input[type=text], form.editThermostatPopup input[type=url] {
+    background: white;
+    width: 100%;
+}
+
+form.newThermostatPopup input[type=text], form.newThermostatPopup input[type=url] {
     background: white;
     width: 100%;
 }
