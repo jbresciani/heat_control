@@ -1,3 +1,4 @@
 .vscode
 .gitconfig
 .DS_Store
+**/*.pyc
