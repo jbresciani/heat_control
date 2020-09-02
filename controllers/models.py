@@ -1,5 +1,8 @@
+import logging
 from django.db import models
 from django.shortcuts import get_object_or_404
+
+logger = logging.getLogger(__name__)
 
 # Create your models here.
 
@@ -26,7 +29,7 @@ def get_all_thermostats():
 def add_thermostat(request):
     thermostatForm = ThermostateForm(request.POST)
     if thermostatForm.is_valid():
-        print(f"----- Adding {thermostatForm.data['name']}")
+        logger.info(f"Adding new thermostat {thermostatForm.data['name']}")
         newThermostat = Thermostats(
             name=thermostatForm.cleaned_data['name'],
             group=thermostatForm.cleaned_data['group'],
@@ -39,7 +42,7 @@ def add_thermostat(request):
 def edit_thermostat(request):
     thermostatForm = ThermostateForm(request.POST)
     if thermostatForm.is_valid():
-        print(f"----- Updating {thermostatForm.data['id']}")
+        logger.warning(f"Updating config for thermostat {thermostatForm.data['id']}")
         thermostat = get_object_or_404(Thermostats, id=thermostatForm.data['id'])
         thermostat.name = request.POST['name']
         thermostat.group = request.POST['group']
@@ -50,7 +53,7 @@ def edit_thermostat(request):
 
 
 def delete_thermostat(id):
-    print(f'----- Deleting {id}')
+    logger.warning(f'Deleting thermostat {id}')
     Thermostats.objects.filter(id=id).delete()
 
 
@@ -58,3 +61,4 @@ def update_thermostat_temp(request):
     thermostat = get_object_or_404(Thermostats, id=request.POST['id'])
     thermostat.requested_temp = request.POST['requested_temp']
     thermostat.save(update_fields=["requested_temp"])
+    # there should be a call here to update the remote thermostat's temp
