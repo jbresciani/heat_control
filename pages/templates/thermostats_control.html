@@ -22,24 +22,18 @@
         </div>
       </div>
       <div class="editThermostatPopup" id="editDiv-{{ thermostat.id }}">
-        <form class=editThermostatPopup id="editForm-{{ thermostat.id }}" method=post>
-          <label for="name">Name:</label>
-          <input class=editThermostat type=text value="{{ thermostat.name }}" name=name><br>
-          <label for="group">Group:</label> 
-          <input class=editThermostat type=text value="{{ thermostat.group }}" name=group><br>
-          <label for="description">Description:</label>
-          <input class=editThermostat type=text value="{{ thermostat.description }}" name=description><br>
-          <label for="url">URL:</label>
-          <input class=editThermostat type=url value="{{ thermostat.url }}" name=url><br>
-          <input type="hidden" name="id" value="{{ thermostat.id }}">
+        <form class=editThermostatPopup id="editForm-{{ thermostat.id }}" method=post>{% csrf_token %}
+          {% csrf_token %}
+          {{ full_thermostat_form }}<br>
           <input type="hidden" name="action" value="edit">
+          <input type="hidden" name="id" value="{{ thermostat.id }}">
           <br>
           <button type="submit" class="editButton">Edit</button>
           <button type="button" class="cancelButton" onclick="cancelEditForm_{{ thermostat.id }}()">Cancel</button>
         </form>
       </div>
       <div class="deleteThermostatPopup" id="deleteDiv-{{ thermostat.id }}">
-        <form class=deleteThermostatPopup id="deleteForm-{{ thermostat.id }}" method=post>
+        <form class=deleteThermostatPopup id="deleteForm-{{ thermostat.id }}" method=post>{% csrf_token %}
           <input type="hidden" name="id" value="{{ thermostat.id }}">
           <input type="hidden" name="action" value="delete">
           <button type="submit" class="deleteButton">Confirm Deletion of {{ thermostat.name }}</button>
@@ -48,7 +42,7 @@
       </div>
       <div class="thermostatInfo" id="thermostat-{{ thermostat.id }}">
         <div class="temperatureSlider">
-          <form id="slider-{{ thermostat.id }}" method='POST'>
+          <form id="slider-{{ thermostat.id }}" method=''>{% csrf_token %}
             <input type="range" min="1" max="50" value="{{ thermostat.requested_temp }}" class="temperatureSlider" id="input-{{ thermostat.id }}" name="requested_temp">
             <input type="hidden" name="id" value="{{ thermostat.id }}">
             <input type="hidden" name="action" value="change_temp">
@@ -87,25 +81,18 @@
       {% endfor %}
     </div>
     {% endfor %}
-    {% if warning_message %}
+    {% if form_errors %}
     <div class=editThermostatErrorTop>
-      <p class=editThermostatErrorTop><strong>Error:</strong> {{ warning_message }}
+      <p class=editThermostatErrorTop><strong>Error:</strong> {{ form_errors }}
     </div>
     {% endif %}
     <div id=newThermostat class=newThermostat>
       <button class="newThermostatOpenButton" onclick="openNewThermostatForm()">Add New Thermostat</button>
       <div class="newThermostatPopup" id="createNewThermostat">
         <form class=newThermostatPopup id="createNewThermostat" method=post>
-          <label for="name">Name:</label>
-          <input class=editThermostat type=text name=name><br>
-          <label for="group">Group:</label> 
-          <input class=editThermostat type=text name=group><br>
-          <label for="description">Description:</label>
-          <input class=editThermostat type=text name=description><br>
-          <label for="url">URL:</label>
-          <input class=editThermostat type=url name=url><br>
+          {% csrf_token %}
+          {{ full_thermostat_form }}<br>
           <input type="hidden" name="action" value="new">
-          <br>
           <button type="submit" class="editButton">Add</button>
           <button type="button" class="cancelButton" onclick="cancelNewThermostatForm()">Cancel</button>
         </form>
