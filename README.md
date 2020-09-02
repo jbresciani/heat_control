@@ -16,3 +16,13 @@ python wsgi.py
 ```
 
 The web service listens on <http://localhost.localdomain:8080> so you may have to add a entry to your local hosts file to have 127.0.0.1 listen on that name
+
+## Django notes
+
+django-admin startproject config .
+python manage.py migrate
+python manage.py startapp pages
+
+## Django startup
+
+python manage.py runserver
