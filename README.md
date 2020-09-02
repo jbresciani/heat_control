@@ -21,7 +21,10 @@ The web service listens on <http://localhost.localdomain:8080> so you may have t
 
 django-admin startproject config .
 python manage.py migrate
-python manage.py startapp pages
+python manage.py startapp heating
+python manage.py startapp thermostats
+python manage.py makemigrations
+python manage.py migrate
 
 ## Django startup
 

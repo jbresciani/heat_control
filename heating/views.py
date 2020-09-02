@@ -1,22 +1,11 @@
 from django.shortcuts import render, redirect
-from controllers.models import get_all_thermostats, ThermostateForm, add_thermostat, delete_thermostat, edit_thermostat, update_thermostat_temp
 from django.http import HttpResponse
 from django.views import View
+from .models import get_all_thermostats, ThermostateForm, add_thermostat, delete_thermostat, edit_thermostat, update_thermostat_temp
 
 
 def home_view(requests):
     return redirect('thermostats_control/', permanent=False)
-
-
-def get_thermostats():
-    return [{
-        "id": "123451234",
-        "name": "mockunit",
-        "group": "mockgroup",
-        "description": "mock",
-        "url": "http://localhost:1234",
-        "requested_temp": 10
-    }]
 
 
 def get_thermostat_context():

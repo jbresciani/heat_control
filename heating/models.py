@@ -1,4 +1,5 @@
 import logging
+import requests
 from django.db import models
 from django.shortcuts import get_object_or_404
 
@@ -20,6 +21,10 @@ class ThermostateForm(ModelForm):
     class Meta:
         model = Thermostats
         exclude = ('current_temp','requested_temp')
+
+
+def get_thermostat(id):
+    return Thermostats.objects.filter(id=id)
 
 
 def get_all_thermostats():
@@ -58,7 +63,11 @@ def delete_thermostat(id):
 
 
 def update_thermostat_temp(request):
-    thermostat = get_object_or_404(Thermostats, id=request.POST['id'])
-    thermostat.requested_temp = request.POST['requested_temp']
+    requested_temp = request.POST['requested_temp']
+    thermostat_id = request.POST['id']
+    thermostat = get_object_or_404(Thermostats, id=thermostat_id)
+    thermostat.requested_temp = requested_temp
     thermostat.save(update_fields=["requested_temp"])
-    # there should be a call here to update the remote thermostat's temp
+    # a call to update the remote thermostat's temp
+    response = requests.post(thermostat.url, json={"requested_temp": int(requested_temp)})
+    response.raise_for_status()
