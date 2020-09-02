@@ -37,8 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'heating',
-    'thermostat'
+    'heating.apps.HeatingConfig',
+    'thermostat.apps.ThermostatConfig'
 ]
 
 LOGGING = {
