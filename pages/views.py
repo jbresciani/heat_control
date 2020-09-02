@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from controllers.models import get_all_thermostats, newOrUpdateThermostateForm, addThermostat, updateThermostat, deleteThermostat
+from controllers.models import get_all_thermostats, ThermostateForm, add_thermostat, delete_thermostat, edit_thermostat, update_thermostat_temp
 from django.http import HttpResponse
 from django.views import View
 
@@ -22,7 +22,7 @@ def get_thermostats():
 def get_thermostat_context():
     thermostats = get_all_thermostats()
     context = {
-        "full_thermostat_form": newOrUpdateThermostateForm(),
+        "full_thermostat_form": ThermostateForm(),
         "groups": {thermostat.group for thermostat in thermostats},
         "thermostats": thermostats
     }
@@ -34,12 +34,15 @@ class thermostatsControlView(View):
         return render(request, 'thermostats_control.html', get_thermostat_context())
 
     def post(self, request):
+        form_errors = None
         if request.POST['action'] == 'new':
-            form_errors = addThermostat(request)
+            form_errors = add_thermostat(request)
         if request.POST['action'] == 'edit':
-            form_errors = updateThermostat(request)
+            form_errors = edit_thermostat(request)
         if request.POST['action'] == 'delete':
-            form_errors = deleteThermostat(request.POST['id']) 
+            delete_thermostat(request.POST['id'])
+        if request.POST['action'] == 'update':
+            update_thermostat_temp(request)
         context = get_thermostat_context()
         context['form_errors'] = form_errors
         return render(request, 'thermostats_control.html', context)

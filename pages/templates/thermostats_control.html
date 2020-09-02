@@ -42,10 +42,10 @@
       </div>
       <div class="thermostatInfo" id="thermostat-{{ thermostat.id }}">
         <div class="temperatureSlider">
-          <form id="slider-{{ thermostat.id }}" method=''>{% csrf_token %}
+          <form id="slider-{{ thermostat.id }}" method='POST'>{% csrf_token %}
             <input type="range" min="1" max="50" value="{{ thermostat.requested_temp }}" class="temperatureSlider" id="input-{{ thermostat.id }}" name="requested_temp">
             <input type="hidden" name="id" value="{{ thermostat.id }}">
-            <input type="hidden" name="action" value="change_temp">
+            <input type="hidden" name="action" value="update">
           </form>
         </div>
         <p class="temperatureInfo">Requested temperature: <span class="thermostatValue" id="requestedTemp-{{ thermostat.id }}">{{ thermostat.requested_temp }}</span><span class="thermostatValue" ></span>&#8451;</span></p>
