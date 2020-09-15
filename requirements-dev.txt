@@ -3,3 +3,5 @@ pylama
 flake8
 autopep8
 isort
+black
+pydocstyle
