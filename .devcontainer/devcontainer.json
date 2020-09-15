@@ -13,17 +13,29 @@
 	"settings": { 
 		"terminal.integrated.shell.linux": "/bin/bash",
 		"python.pythonPath": "/usr/local/bin/python",
+		"python.formatting.autopep8Enabled": true,
+		"python.formatting.autopep8Path": "/usr/local/bin/autopep8",
+		"python.formatting.blackEnabled": true,
+		"python.formatting.blackPath": "/usr/local/bin/black",
 		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": true,
-		"python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
-		"python.formatting.blackPath": "/usr/local/py-utils/bin/black",
-		"python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
-		"python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
-		"python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
-		"python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
-		"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
-		"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
-		"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
+		"python.linting.pylintPath": "/usr/local/bin/pylint",
+		"python.linting.pydocstyleEnabled": true,
+		"python.linting.pydocstylePath": "/usr/local/bin/pydocstyle",
+		"python.linting.flake8Enabled": true,
+		"python.linting.flake8Path": "/usr/local/bin/autopep8",
+		"python.linting.pycodestyleEnabled": true,
+		"python.linting.pycodestylePath": "/usr/local/bin/flake8",
+		"python.linting.pylintArgs": [
+			"--load-plugins",
+			"pylint_django"
+		],
+		"python.linting.pycodestyleArgs": ["--ignore=E501"], // E501 is line to long
+		"[python]": {
+			"editor.codeActionsOnSave": {
+				"source.organizeImports": true
+			}
+		}
 	},
 
 	// Add the IDs of extensions you want installed when the container is created.
@@ -33,7 +45,7 @@
 	],
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [8080],
+	"forwardPorts": [8080, 8000],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	// "postCreateCommand": "pip3 install --user -r requirements.txt",
